@@ -8,6 +8,15 @@
     <title>User</title>
 </head>
 <body>
-
+<p><h1>Имя</h1></p>
+<p th:text="${user.getFirstname()}"></p>
+<p><h1>Фамилия</h1></p>
+<p th:text="${user.getLastname()}"></p>
+<p><h1>Отчество</h1></p>
+<p th:text="${user.getPatronymic()}"></p>
+<p><h1>Логин</h1></p>
+<p th:text="${user.getUsername()}"></p>
+<p><h1>Почта</h1></p>
+<p th:text="${user.getEmail()}"></p>
 </body>
 </html>

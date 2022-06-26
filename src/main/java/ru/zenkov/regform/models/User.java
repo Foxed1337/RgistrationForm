@@ -20,5 +20,8 @@ public class User {
     private String patronymic;
     private String username;
     private String email;
+    private String hashPassword;
+
+    @Transient
     private String password;
 }
