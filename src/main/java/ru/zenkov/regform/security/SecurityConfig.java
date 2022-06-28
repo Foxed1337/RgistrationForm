@@ -7,19 +7,21 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-
+import ru.zenkov.regform.services.UserDetailsServiceImpl;
 
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder) {
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -36,7 +38,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .defaultSuccessUrl("/user-info")
                     .failureUrl("/signIn")
                     .permitAll();
-        System.out.println("Настроили секурити");
     }
 
     @Override

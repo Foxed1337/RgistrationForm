@@ -8,15 +8,13 @@
     <title>User</title>
 </head>
 <body>
-<p><h1>Имя</h1></p>
-<p th:text="${user.getFirstname()}"></p>
-<p><h1>Фамилия</h1></p>
-<p th:text="${user.getLastname()}"></p>
-<p><h1>Отчество</h1></p>
-<p th:text="${user.getPatronymic()}"></p>
-<p><h1>Логин</h1></p>
-<p th:text="${user.getUsername()}"></p>
-<p><h1>Почта</h1></p>
-<p th:text="${user.getEmail()}"></p>
+<p th:text="'Данные пользователя ' + ${user.getUsername()}"></p>
+<p th:text="'Имя: ' + ${user.getFirstname()}"></p>
+<p th:text="'Фамилмя: ' + ${user.getLastname()}"></p>
+<p th:text="'Отчесво: ' + ${user.getPatronymic()}"></p>
+<p th:text="'Почта: ' + ${user.getEmail()}"></p>
+<div>
+    <button onclick="location.href = '/';">На главную</button>
+</div>
 </body>
 </html>

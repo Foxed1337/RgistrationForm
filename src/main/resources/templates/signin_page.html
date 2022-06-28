@@ -10,10 +10,25 @@
 <body>
 <div>
     <form action="/signIn" method="post">
-        <input name="username" placeholder="Логин">
-        <input name="password" placeholder="Пароль" type="password">
-        <button type="submit">Войти</button>
+        <div>
+            <label>
+                <p>Введите логин</p>
+                <input name="username" placeholder="Логин" required pattern="^\S*$" title="Введите данные без пробелов">
+            </label>
+        </div>
+        <div>
+            <label>
+                <p>Введите пароль</p>
+                <input name="password" placeholder="Пароль" type="password" required pattern="^\S*$" title="Введите данные без пробелов">
+            </label>
+        </div>
+        <div>
+            <button type="submit">Войти</button>
+        </div>
     </form>
+    <div>
+        <button onclick="location.href = '/';">На главную</button>
+    </div>
 </div>
 </body>
 </html>
