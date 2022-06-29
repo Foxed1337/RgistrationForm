@@ -1,16 +1,13 @@
 package ru.zenkov.regform.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.zenkov.regform.models.Message;
 import ru.zenkov.regform.models.User;
 import ru.zenkov.regform.repositories.UserRepositories;
 
-import java.util.concurrent.TimeoutException;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -32,19 +29,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else throw new UsernameNotFoundException("Пользователя с таким логином нет!");
     }
 
+    /**
+     * Добавляем бользователя в базу данных, шифруя его пароль.
+     * @param user - пользователь, которого собираемся добавить в БД.
+     */
     public void addUser(User user) {
         user.setHashPassword(passwordEncoder.encode(user.getDecodedPassword()));
         userRepositories.save(user);
     }
 
+    /**
+     * Проверяем нет ли уже зарегестрированных пользователей с таким же логином или почтой.
+     * @param user - пользователь, которого хотим зарегистрировать в системе.
+     * @return true - пользователя с токой же почтой или таким же логином нет в системе,
+     * false - такой пользователь уже зарегестрирован.
+     */
     public boolean checkForSameUsernameAndEmail(User user) {
         User userByUsername = userRepositories.findByUsername(user.getUsername());
         User userByEmail = userRepositories.findUserByEmail(user.getEmail());
 
         return  userByEmail != null || userByUsername != null;
-    }
-
-    public void deleteUser(User user) {
-        userRepositories.delete(user);
     }
 }

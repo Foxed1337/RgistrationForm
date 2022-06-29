@@ -16,25 +16,38 @@ public class MessagingService {
         return new Message(username);
     }
 
+    /**
+     * По сути та самая внешная система, которая выносит решения по контретному пользователю
+     *
+     * @param message сообщение, отправляемое во внешнюю систему
+     * @return Тело ответа
+     */
     private Message receive(Message message) throws TimeoutException {
-        if(shouldThrowTimeout()) {
+        if (shouldThrowTimeout()) {
             sleep();
 
             throw new TimeoutException("Timeout!");
         }
 
-        if(shouldSleep()) {
+        if (shouldSleep()) {
             sleep();
         }
         message.setRegStatusDecision(makeDecision());
         return message;
     }
 
+    /**
+     * Делаем запрос во внешнюю систему по конкрутному пользователю
+     *
+     * @param username логин пользователя
+     * @return Тело ответа
+     */
     public Message doRequest(String username) throws TimeoutException {
         final Message message = send(username);
 
         return receive(message);
     }
+
     @SneakyThrows
     private static void sleep() {
         Thread.sleep(TimeUnit.MINUTES.toMillis(1));
@@ -48,6 +61,11 @@ public class MessagingService {
         return new Random().nextInt(10) == 1;
     }
 
+    /**
+     * С какой-то вероятностью отказываем пользователю в регистрации
+     *
+     * @return принятое решение, true - одобрено, false - отказ в регистрации
+     */
     private static boolean makeDecision() {
         return new Random().nextInt(10) > 4;
     }

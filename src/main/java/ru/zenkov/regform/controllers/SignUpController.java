@@ -11,6 +11,7 @@ import ru.zenkov.regform.services.RegistrationService;
 import ru.zenkov.regform.services.UserDetailsServiceImpl;
 
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
 
 
 @Controller
@@ -20,10 +21,13 @@ public class SignUpController {
 
     private final RegistrationService registrationService;
 
+    private final Logger log = Logger.getLogger(this.getClass().getName());
+
     public SignUpController(UserDetailsServiceImpl userDetailsService, RegistrationService registrationService) {
         this.userDetailsService = userDetailsService;
         this.registrationService = registrationService;
     }
+
     @GetMapping("/signUp")
     public String signUp() {
         return "signup_page";
@@ -31,20 +35,27 @@ public class SignUpController {
 
     @PostMapping("/signUp")
     public String signUpUser(User user, Model model) {
-
+        //Проверяем уникальность пользователья
         if (userDetailsService.checkForSameUsernameAndEmail(user)) {
             model.addAttribute("message", "Пользователь с таким логином или почтой уже существует");
+            log.info(String
+                    .format(
+                            "Пользователь %s c почтой %s, не зарегистрирован, т.к. уже есть пользователь с таким логином или почтой уже существует"
+                            , user.getUsername(), user.getEmail()));
             return "signup_page";
         }
 
         try {
+            //Пытаемся зарегистрировать пользователья,
+            // если внешняя система одобряет регистрацию, то добавляем пользователья в БД
             if (registrationService.registrationUser(user)) {
                 userDetailsService.addUser(user);
-                System.out.println("Добавили пользователя");
+                log.info(String.format("Пользователь %s, зарегистрирован и добавлен в БД", user.getUsername()));
             } else {
-                System.out.println("Не добавили пользователя");
+                log.info(String.format("Пользователь %s, не зарегистрирован", user.getUsername()));
             }
         } catch (TimeoutException e) {
+            //Обрабатываем случаей, если сервис регистрации или отправки почты не доступны
             model.addAttribute("message",
                     "Сервис регистрации сейчас не доступен, повторите попытку позже");
             return "signup_page";
